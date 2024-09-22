@@ -29,3 +29,15 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal --framework "${{ matrix.framework }}" --blame-crash --diag:logs/logs.txt
+    - name: Upload logs
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: logs-${{ matrix.framework }}
+        path: logs
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: test-results-${{ matrix.framework }}
+        path: TestResults
