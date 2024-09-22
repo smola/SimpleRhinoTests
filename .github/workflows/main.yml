@@ -11,23 +11,21 @@ env:
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        framework: [ "net7.0-windows", "net48" ]
+    name: Test (framework ${{ matrix.framework }})
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v3
-
     - name: Install Rhino
       uses: smola/setup-rhino3d@v1
       id: setup_rhino
       with:
         email: ${{ secrets.EMAIL_ADDRESS }}
-
     - name: Restore dependencies
       run: dotnet restore
-    
     - name: Build
       run: dotnet build --no-restore
-    
     - name: Test
-      run: dotnet test --no-build --verbosity normal --framework "net7.0-windows"
+      run: dotnet test --no-build --verbosity normal --framework "${{ matrix.framework }}"
